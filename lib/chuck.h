@@ -7,6 +7,10 @@
 #ifndef CLOX_CHUCK_H
 #define CLOX_CHUCK_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "common.h"
 
 // In the bytecode format, each instruction consists of a 1-byte operation code.
@@ -23,5 +27,10 @@ typedef struct {
 void initChunk(Chunk* chuck);
 void freeChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CLOX_CHUCK_H
