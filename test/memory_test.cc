@@ -5,7 +5,9 @@
 
 #include <gtest/gtest.h>
 
+extern "C" {
 #include "memory.h"
+}
 
 // Test for reallocate function
 TEST(MemoryTest, ReallocateTest) {

@@ -6,8 +6,10 @@
 #include <gtest/gtest.h>
 #include <string>
 
+extern "C" {
 #include "chuck.h"
 #include "debug.h"
+}
 
 std::vector<std::string> GetCapturedStdoutLines() {
   std::string output = testing::internal::GetCapturedStdout();

@@ -4,7 +4,9 @@
 
 #include <gtest/gtest.h>
 
+extern "C" {
 #include "chuck.h"
+}
 
 TEST(ChunkTest, InitChunk) {
   Chunk chunk;

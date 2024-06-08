@@ -7,17 +7,9 @@
 #ifndef CLOX_DEBUG_H
 #define CLOX_DEBUG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "chuck.h"
 
 void disassembleChunk(Chunk* chunk, const char * name);
 int disassembleInstruction(Chunk* chunk, int offset);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // CLOX_DEBUG_H
