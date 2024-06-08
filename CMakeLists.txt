@@ -27,6 +27,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 add_executable(google_test_run test/memory_test.cc
         test/debug_test.cc
         test/main_test.cc
-        test/chunk_test.cc)
+        test/chunk_test.cc
+        test/value_test.cc)
 target_link_libraries(google_test_run gtest gtest_main)
 target_link_libraries(google_test_run libclox)
