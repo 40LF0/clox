@@ -4,8 +4,8 @@
 // This module defines a chunk, which is a sequence of bytecode instructions
 // used to represent code in the interpreter.
 
-#ifndef CLOX_CHUCK_H
-#define CLOX_CHUCK_H
+#ifndef CLOX_CHUNK_H
+#define CLOX_CHUNK_H
 
 #include "common.h"
 
@@ -24,4 +24,4 @@ void initChunk(Chunk* chuck);
 void freeChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte);
 
-#endif // CLOX_CHUCK_H
+#endif // CLOX_CHUNK_H

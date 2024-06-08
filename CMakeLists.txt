@@ -5,8 +5,8 @@ set(CMAKE_C_STANDARD 23)
 
 add_library(libclox SHARED
         lib/common.h
-        lib/chuck.h
-        lib/chuck.c
+        lib/chunk.h
+        lib/chunk.c
         lib/memory.h
         lib/memory.c
         lib/debug.h

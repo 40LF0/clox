@@ -7,7 +7,7 @@
 #include <string>
 
 extern "C" {
-#include "chuck.h"
+#include "chunk.h"
 #include "debug.h"
 }
 

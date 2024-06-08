@@ -1,11 +1,12 @@
 // chunk_test.cc
 // Created by Seungyeon Chung on 2024.06.08.
 //
+// Test file for chunk module.
 
 #include <gtest/gtest.h>
 
 extern "C" {
-#include "chuck.h"
+#include "chunk.h"
 }
 
 TEST(ChunkTest, InitChunk) {

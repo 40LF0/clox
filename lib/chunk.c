@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-#include "chuck.h"
+#include "chunk.h"
 #include "memory.h"
 
 void initChunk(Chunk *chunk) {
