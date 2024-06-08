@@ -1,6 +1,8 @@
 // memory_test.c
 // Created by Seungyeon Chung on 2024.06.07.
 //
+// Test file for memory module.
+
 #include <gtest/gtest.h>
 
 #include "memory.h"
