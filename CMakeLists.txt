@@ -16,18 +16,20 @@ add_library(libclox SHARED
 )
 
 include_directories(lib)
-add_executable(clox main.c
-)
+add_executable(clox main.c)
 target_link_libraries(clox libclox)
 
 add_subdirectory(googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-# 'Google_Tests_run' is the target name
-add_executable(google_test_run test/memory_test.cc
-        test/debug_test.cc
+# 'google_test_run' is the target name
+add_executable(google_test_run
         test/main_test.cc
+        test/memory_test.cc
+        test/debug_test.cc
         test/chunk_test.cc
-        test/value_test.cc)
+        test/value_test.cc
+)
+
 target_link_libraries(google_test_run gtest gtest_main)
 target_link_libraries(google_test_run libclox)
