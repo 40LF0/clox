@@ -4,10 +4,11 @@
 // This module defines a value, which is literal constant.
 // The immediate instruction following the opcode points to this value.
 
+#include "value.h"
+
 #include <stdio.h>
 
 #include "memory.h"
-#include "value.h"
 
 void initValueArray(ValueArray *array) {
   array->values = NULL;

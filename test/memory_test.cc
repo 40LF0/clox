@@ -35,7 +35,7 @@ TEST(MemoryTest, GrowCapacityTest) {
 // Test for GROW_ARRAY macro
 TEST(MemoryTest, GrowArrayTest) {
   // Allocate an initial array with capacity 4
-  int *arr = GROW_ARRAY(int, nullptr, 0, 4);
+  int* arr = GROW_ARRAY(int, nullptr, 0, 4);
   ASSERT_NE(arr, nullptr);
 
   // Fill the array with some values
@@ -44,7 +44,7 @@ TEST(MemoryTest, GrowArrayTest) {
   }
 
   // Resize the array to double its capacity
-  int *newArr = GROW_ARRAY(int, arr, 4, 8);
+  int* newArr = GROW_ARRAY(int, arr, 4, 8);
   ASSERT_NE(newArr, nullptr);
 
   // Check if the values are preserved after resizing
@@ -59,7 +59,7 @@ TEST(MemoryTest, GrowArrayTest) {
 // Test for FREE_ARRAY macro
 TEST(MemoryTest, FreeArrayTest) {
   // Allocate an initial array with capacity 4
-  int *arr = GROW_ARRAY(int, nullptr, 0, 4);
+  int* arr = GROW_ARRAY(int, nullptr, 0, 4);
   ASSERT_NE(arr, nullptr);
 
   // Free the array

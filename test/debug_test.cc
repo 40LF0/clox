@@ -4,6 +4,7 @@
 // Test file for debug module.
 
 #include <gtest/gtest.h>
+
 #include <string>
 
 extern "C" {

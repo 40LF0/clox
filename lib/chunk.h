@@ -16,10 +16,10 @@
 typedef enum { OP_CONSTANT, OP_RETURN } OpCode;
 
 typedef struct {
-  int count;            // Number of bytes in the chunk
-  int capacity;         // Capacity of the chunk (allocated memory)
-  uint8_t *code;        // Array to store bytecodes
-  ValueArray constants; // Array to store values
+  int count;             // Number of bytes in the chunk
+  int capacity;          // Capacity of the chunk (allocated memory)
+  uint8_t *code;         // Array to store bytecodes
+  ValueArray constants;  // Array to store values
 } Chunk;
 
 void initChunk(Chunk *chuck);
@@ -27,4 +27,4 @@ void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte);
 int addConstant(Chunk *chunk, Value value);
 
-#endif // CLOX_CHUNK_H
+#endif  // CLOX_CHUNK_H

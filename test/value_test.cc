@@ -53,12 +53,12 @@ TEST(ValueArrayTest, WriteValueArrayDoubleCapacity) {
   ValueArray valueArray;
   initValueArray(&valueArray);
   for (int i = 0; i < 9; ++i) {
-    writeValueArray(&valueArray, (double) i);
+    writeValueArray(&valueArray, (double)i);
   }
   EXPECT_EQ(9, valueArray.count);
   EXPECT_EQ(16, valueArray.capacity);
   for (int i = 0; i < 9; ++i) {
-    EXPECT_EQ(valueArray.values[i], (double) i);
+    EXPECT_EQ(valueArray.values[i], (double)i);
   }
   freeValueArray(&valueArray);
 }

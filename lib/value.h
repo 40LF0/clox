@@ -12,9 +12,9 @@
 typedef double Value;
 
 typedef struct {
-  int capacity;  // Capacity of the valueArray (allocated memory)
-  int count;     // Number of values in the valueArray
-  Value *values; // Array to store values
+  int capacity;   // Capacity of the valueArray (allocated memory)
+  int count;      // Number of values in the valueArray
+  Value* values;  // Array to store values
 } ValueArray;
 
 void initValueArray(ValueArray* array);
@@ -22,4 +22,4 @@ void writeValueArray(ValueArray* array, Value value);
 void freeValueArray(ValueArray* array);
 void printValue(Value value);
 
-#endif // CLOX_VALUE_H
+#endif  // CLOX_VALUE_H

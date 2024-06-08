@@ -4,9 +4,10 @@
 // This module defines a chunk, which is a sequence of bytecode instructions
 // used to represent code in the interpreter.
 
+#include "chunk.h"
+
 #include <stdlib.h>
 
-#include "chunk.h"
 #include "memory.h"
 
 void initChunk(Chunk *chunk) {
