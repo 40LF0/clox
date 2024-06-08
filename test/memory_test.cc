@@ -68,8 +68,3 @@ TEST(MemoryTest, FreeArrayTest) {
   // Actual memory deallocation is not checked here.
   SUCCEED();
 }
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
