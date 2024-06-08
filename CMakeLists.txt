@@ -9,6 +9,8 @@ add_library(libclox SHARED
         lib/chuck.c
         lib/memory.h
         lib/memory.c
+        lib/debug.h
+        lib/debug.c
 )
 
 include_directories(lib)
