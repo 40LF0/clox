@@ -51,9 +51,12 @@ TEST(ChunkTest, WriteChunkDoubleCapacity) {
   Chunk chunk;
   initChunk(&chunk);
   for (int i = 0; i < 9; ++i) {
-    writeChunk(&chunk, 1);
+    writeChunk(&chunk, i);
   }
   EXPECT_EQ(9, chunk.count);
   EXPECT_EQ(16, chunk.capacity);
+  for (int i = 0; i < 9; ++i) {
+    EXPECT_EQ(chunk.code[i], i);
+  }
   freeChunk(&chunk);
 }
