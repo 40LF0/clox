@@ -104,6 +104,23 @@ TEST(DisassembleChunkTest, HandlesMultipleInstructions) {
   freeChunk(&chunk);
 }
 
+void checkConstantLine(std::vector<std::string>& lines, int& expectOffset,
+                       int& line, const char* opCode, const int offset,
+                       const int numChunks) {
+  char expected[50];
+  sprintf(expected, "%04d %4d %-16s %4d '%g'", expectOffset, line, opCode,
+          (line * numChunks), (double)(line * numChunks));
+  EXPECT_EQ(lines[(line * numChunks) + 1], expected);
+  expectOffset += offset;
+
+  for (int i = 1; i < numChunks; ++i) {
+    sprintf(expected, "%04d    | %-16s %4d '%g'", expectOffset, opCode,
+            (line * numChunks) + i, (double)(line * numChunks) + i);
+    EXPECT_EQ(lines[(line * numChunks) + 1 + i], expected);
+    expectOffset += offset;
+  }
+}
+
 TEST(DisassembleChunkTest, WriteConstantTest) {
   Chunk chunk;
   initChunk(&chunk);
@@ -112,40 +129,20 @@ TEST(DisassembleChunkTest, WriteConstantTest) {
   }
 
   testing::internal::CaptureStdout();
-  disassembleChunk(&chunk, "integrated_chunk");
+  disassembleChunk(&chunk, "constants_chunk");
   std::vector<std::string> lines = GetCapturedStdoutLines();
-  EXPECT_EQ(lines[0], "== integrated_chunk ==");
-  int expectOffset = 0;
-  int line = 0;
-  for (line = 0; line < 256 / 4; ++line) {
-    char expected[50];
-    sprintf(expected, "%04d %4d %-16s %4d '%g'", expectOffset, line,
-            "OP_CONSTANT", (line * 4), (double)(line * 4));
-    EXPECT_EQ(lines[(line * 4) + 1], expected);
-    expectOffset += 2;
 
-    for (int i = 1; i <= 3; ++i) {
-      sprintf(expected, "%04d    | %-16s %4d '%g'", expectOffset, "OP_CONSTANT",
-              (line * 4) + i, (double)(line * 4) + i);
-      EXPECT_EQ(lines[(line * 4) + 1 + i], expected);
-      expectOffset += 2;
-    }
-  }
-  for (line; line < 512 / 4; ++line) {
-    char expected[50];
-    sprintf(expected, "%04d %4d %-16s %4d '%g'", expectOffset, line,
-            "OP_CONSTANT_LONG", (line * 4), (double)(line * 4));
-    EXPECT_EQ(lines[(line * 4) + 1], expected);
-    expectOffset += 4;
-
-    for (int i = 1; i <= 3; ++i) {
-      sprintf(expected, "%04d    | %-16s %4d '%g'", expectOffset,
-              "OP_CONSTANT_LONG", (line * 4) + i, (double)(line * 4) + i);
-      EXPECT_EQ(lines[(line * 4) + 1 + i], expected);
-      expectOffset += 4;
-    }
-  }
   ASSERT_EQ(lines.size(), 513);
+  EXPECT_EQ(lines[0], "== constants_chunk ==");
+  int expectOffset = 0;
+  int line;
+  for (line = 0; line < 256 / 4; ++line) {
+    checkConstantLine(lines, expectOffset, line, "OP_CONSTANT", 2, 4);
+  }
+  for (; line < 512 / 4; ++line) {
+    checkConstantLine(lines, expectOffset, line, "OP_CONSTANT_LONG", 4, 4);
+  }
+
   freeChunk(&chunk);
 }
 
