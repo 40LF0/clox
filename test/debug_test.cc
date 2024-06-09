@@ -76,19 +76,31 @@ TEST(DisassembleChunkTest, HandlesMultipleInstructions) {
   Chunk chunk;
   initChunk(&chunk);
 
-  int constant = addConstant(&chunk, 1.2);
+  int constant1 = addConstant(&chunk, 1.23);
+  int constant2 = addConstant(&chunk, 1.26);
+
   writeChunk(&chunk, OP_CONSTANT, 123);
-  writeChunk(&chunk, constant, 123);
+  writeChunk(&chunk, constant1, 123);
   writeChunk(&chunk, OP_RETURN, 123);
+  writeChunk(&chunk, OP_RETURN, 124);
+  writeChunk(&chunk, OP_RETURN, 125);
+  writeChunk(&chunk, OP_CONSTANT, 126);
+  writeChunk(&chunk, constant2, 126);
+  writeChunk(&chunk, OP_RETURN, 126);
 
   testing::internal::CaptureStdout();
   disassembleChunk(&chunk, "integrated_chunk");
   std::vector<std::string> lines = GetCapturedStdoutLines();
 
-  ASSERT_EQ(lines.size(), 3);
+  ASSERT_EQ(lines.size(), 7);
   EXPECT_EQ(lines[0], "== integrated_chunk ==");
-  EXPECT_EQ(lines[1], "0000  123 OP_CONSTANT         0 '1.2'");
+  EXPECT_EQ(lines[1], "0000  123 OP_CONSTANT         0 '1.23'");
   EXPECT_EQ(lines[2], "0002    | OP_RETURN");
+  EXPECT_EQ(lines[3], "0003  124 OP_RETURN");
+  EXPECT_EQ(lines[4], "0004  125 OP_RETURN");
+  EXPECT_EQ(lines[5], "0005  126 OP_CONSTANT         1 '1.26'");
+  EXPECT_EQ(lines[6], "0007    | OP_RETURN");
+
 
   freeChunk(&chunk);
 }
