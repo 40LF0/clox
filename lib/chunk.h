@@ -16,16 +16,32 @@
 typedef enum { OP_CONSTANT, OP_RETURN } OpCode;
 
 typedef struct {
+  int line;       // line numbers
+  int runLength;  // run lengths
+} LineRun;
+
+typedef struct {
+  int count;      // Number of LineRun entries
+  int capacity;   // Capacity of the runs array
+  LineRun *runs;  // Array to store run-length encoded line info
+} LineArray;
+
+typedef struct {
   int count;             // Number of bytes in the chunk
   int capacity;          // Capacity of the chunk (allocated memory)
   uint8_t *code;         // Array to store bytecodes
-  int *lines;            // Array to store line info for each byte in bytecode
+  LineArray lines;       // Array to store line info for each byte in bytecode
   ValueArray constants;  // Array to store values
 } Chunk;
+
+void initLineArray(LineArray *array);
+void writeLineArray(LineArray *array, int line);
+void freeLineArray(LineArray *array);
 
 void initChunk(Chunk *chuck);
 void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
 int addConstant(Chunk *chunk, Value value);
+int getLine(Chunk *chunk, int offset);
 
 #endif  // CLOX_CHUNK_H
