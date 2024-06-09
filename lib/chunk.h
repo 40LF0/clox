@@ -13,7 +13,7 @@
 // In the bytecode format, each instruction consists of a 1-byte operation code.
 // This number represents the type of instruction,
 // such as addition, subtraction, variable lookup, etc.
-typedef enum { OP_CONSTANT, OP_RETURN } OpCode;
+typedef enum { OP_CONSTANT, OP_CONSTANT_LONG, OP_RETURN } OpCode;
 
 typedef struct {
   int line;       // line numbers
@@ -41,6 +41,7 @@ void freeLineArray(LineArray *array);
 void initChunk(Chunk *chuck);
 void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
+void writeConstant(Chunk *chunk, Value value, int line);
 int addConstant(Chunk *chunk, Value value);
 int getLine(Chunk *chunk, int offset);
 

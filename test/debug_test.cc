@@ -101,7 +101,51 @@ TEST(DisassembleChunkTest, HandlesMultipleInstructions) {
   EXPECT_EQ(lines[5], "0005  126 OP_CONSTANT         1 '1.26'");
   EXPECT_EQ(lines[6], "0007    | OP_RETURN");
 
+  freeChunk(&chunk);
+}
 
+TEST(DisassembleChunkTest, WriteConstantTest) {
+  Chunk chunk;
+  initChunk(&chunk);
+  for (int i = 0; i < 512; ++i) {
+    writeConstant(&chunk, i, i / 4);
+  }
+
+  testing::internal::CaptureStdout();
+  disassembleChunk(&chunk, "integrated_chunk");
+  std::vector<std::string> lines = GetCapturedStdoutLines();
+  EXPECT_EQ(lines[0], "== integrated_chunk ==");
+  int expectOffset = 0;
+  int line = 0;
+  for (line = 0; line < 256 / 4; ++line) {
+    char expected[50];
+    sprintf(expected, "%04d %4d %-16s %4d '%g'", expectOffset, line,
+            "OP_CONSTANT", (line * 4), (double)(line * 4));
+    EXPECT_EQ(lines[(line * 4) + 1], expected);
+    expectOffset += 2;
+
+    for (int i = 1; i <= 3; ++i) {
+      sprintf(expected, "%04d    | %-16s %4d '%g'", expectOffset, "OP_CONSTANT",
+              (line * 4) + i, (double)(line * 4) + i);
+      EXPECT_EQ(lines[(line * 4) + 1 + i], expected);
+      expectOffset += 2;
+    }
+  }
+  for (line; line < 512 / 4; ++line) {
+    char expected[50];
+    sprintf(expected, "%04d %4d %-16s %4d '%g'", expectOffset, line,
+            "OP_CONSTANT_LONG", (line * 4), (double)(line * 4));
+    EXPECT_EQ(lines[(line * 4) + 1], expected);
+    expectOffset += 4;
+
+    for (int i = 1; i <= 3; ++i) {
+      sprintf(expected, "%04d    | %-16s %4d '%g'", expectOffset,
+              "OP_CONSTANT_LONG", (line * 4) + i, (double)(line * 4) + i);
+      EXPECT_EQ(lines[(line * 4) + 1 + i], expected);
+      expectOffset += 4;
+    }
+  }
+  ASSERT_EQ(lines.size(), 513);
   freeChunk(&chunk);
 }
 
@@ -139,6 +183,28 @@ TEST(DisassembleInstructionTest, HandlesConstantInstruction) {
   EXPECT_EQ(lines[0], "0000  123 OP_CONSTANT         0 '1.2'");
 
   EXPECT_EQ(newOffset, 2);
+
+  freeChunk(&chunk);
+}
+
+TEST(DisassembleInstructionTest, HandlesConstantLongInstruction) {
+  Chunk chunk;
+  initChunk(&chunk);
+
+  int constant = addConstant(&chunk, 1.2);
+  writeChunk(&chunk, OP_CONSTANT_LONG, 123);
+  writeChunk(&chunk, 0, 123);
+  writeChunk(&chunk, 0, 123);
+  writeChunk(&chunk, constant, 123);
+
+  testing::internal::CaptureStdout();
+  int newOffset = disassembleInstruction(&chunk, 0);
+  std::vector<std::string> lines = GetCapturedStdoutLines();
+
+  ASSERT_EQ(lines.size(), 1);
+  EXPECT_EQ(lines[0], "0000  123 OP_CONSTANT_LONG    0 '1.2'");
+
+  EXPECT_EQ(newOffset, 4);
 
   freeChunk(&chunk);
 }
