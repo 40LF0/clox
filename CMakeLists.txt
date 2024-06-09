@@ -13,6 +13,8 @@ add_library(libclox SHARED
         lib/debug.c
         lib/value.h
         lib/value.c
+        lib/vm.h
+        lib/vm.c
 )
 
 include_directories(lib)
