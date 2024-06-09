@@ -19,12 +19,13 @@ typedef struct {
   int count;             // Number of bytes in the chunk
   int capacity;          // Capacity of the chunk (allocated memory)
   uint8_t *code;         // Array to store bytecodes
+  int *lines;            // Array to store line info for each byte in bytecode
   ValueArray constants;  // Array to store values
 } Chunk;
 
 void initChunk(Chunk *chuck);
 void freeChunk(Chunk *chunk);
-void writeChunk(Chunk *chunk, uint8_t byte);
+void writeChunk(Chunk *chunk, uint8_t byte, int line);
 int addConstant(Chunk *chunk, Value value);
 
 #endif  // CLOX_CHUNK_H

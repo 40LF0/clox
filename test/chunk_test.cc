@@ -20,7 +20,7 @@ TEST(ChunkTest, InitChunk) {
 TEST(ChunkTest, WriteChunk) {
   Chunk chunk;
   initChunk(&chunk);
-  writeChunk(&chunk, 1);
+  writeChunk(&chunk, 1, 123);
   EXPECT_EQ(1, chunk.count);
   EXPECT_LE(1, chunk.capacity);
   EXPECT_EQ(1, chunk.code[0]);
@@ -30,7 +30,7 @@ TEST(ChunkTest, WriteChunk) {
 TEST(ChunkTest, FreeChunk) {
   Chunk chunk;
   initChunk(&chunk);
-  writeChunk(&chunk, 1);
+  writeChunk(&chunk, 1, 123);
   freeChunk(&chunk);
   EXPECT_EQ(0, chunk.count);
   EXPECT_EQ(0, chunk.capacity);
@@ -40,7 +40,7 @@ TEST(ChunkTest, FreeChunk) {
 TEST(ChunkTest, WriteChunkInitialCapacity) {
   Chunk chunk;
   initChunk(&chunk);
-  writeChunk(&chunk, 1);
+  writeChunk(&chunk, 1, 123);
   EXPECT_EQ(1, chunk.count);
   EXPECT_EQ(8, chunk.capacity);
   EXPECT_EQ(1, chunk.code[0]);
@@ -51,7 +51,7 @@ TEST(ChunkTest, WriteChunkDoubleCapacity) {
   Chunk chunk;
   initChunk(&chunk);
   for (int i = 0; i < 9; ++i) {
-    writeChunk(&chunk, i);
+    writeChunk(&chunk, i, 123);
   }
   EXPECT_EQ(9, chunk.count);
   EXPECT_EQ(16, chunk.capacity);
