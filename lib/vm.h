@@ -9,12 +9,13 @@
 #include "chunk.h"
 #include "value.h"
 
-#define STACK_MAX 256
+#define VM_STACK_MIN_CAPACITY 256
 
 typedef struct {
   Chunk* chunk;
   uint8_t* ip;
-  Value stack[STACK_MAX];
+  int stackCapacity;
+  Value* stack;
   Value* stackTop;
 } VM;
 

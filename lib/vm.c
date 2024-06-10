@@ -9,21 +9,52 @@
 
 #include "common.h"
 #include "debug.h"
+#include "memory.h"
 
 VM vm;
 
-static void resetStack() { vm.stackTop = vm.stack; }
+static void initStack() {
+  vm.stackCapacity = GROW_CAPACITY(VM_STACK_MIN_CAPACITY);
+  vm.stack = GROW_ARRAY(Value, vm.stack, 0, vm.stackCapacity);
+  vm.stackTop = vm.stack;
+}
 
-void initVM() { resetStack(); }
+static void freeStack() {
+  FREE_ARRAY(Value, vm.stack, vm.stackCapacity);
+  vm.stack = NULL;
+  vm.stackCapacity = 0;
+  vm.stackTop = NULL;
+}
 
-void freeVM() {}
+void initVM() { initStack(); }
+
+void freeVM() { freeStack(); }
 
 void push(Value value) {
+  long long offset = vm.stackTop - vm.stack;
+
+  if (offset >= (vm.stackCapacity - 1)) {
+    int oldCapacity = vm.stackCapacity;
+    vm.stackCapacity = GROW_CAPACITY(oldCapacity);
+    vm.stack = GROW_ARRAY(Value, vm.stack, oldCapacity, vm.stackCapacity);
+    vm.stackTop = vm.stack + offset;
+  }
+
   *vm.stackTop = value;
   vm.stackTop++;
 }
 
 Value pop() {
+  long long offset = vm.stackTop - vm.stack;
+  int minCapacity = GROW_CAPACITY(VM_STACK_MIN_CAPACITY);
+
+  if (vm.stackCapacity > minCapacity && offset <= (vm.stackCapacity / 4)) {
+    int oldCapacity = vm.stackCapacity;
+    vm.stackCapacity = SHRINK_CAPACITY(oldCapacity, minCapacity);
+    vm.stack = GROW_ARRAY(Value, vm.stack, oldCapacity, vm.stackCapacity);
+    vm.stackTop = vm.stack + offset;
+  }
+
   vm.stackTop--;
   return *vm.stackTop;
 }
