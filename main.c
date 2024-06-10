@@ -12,10 +12,9 @@ int main(int argc, const char *argv[]) {
   Chunk chunk;
   initChunk(&chunk);
 
-  for (int i = 0; i < 300; ++i) {
-    writeConstant(&chunk, (double)i / 10, i / 4);
-  }
-  writeChunk(&chunk, OP_RETURN, 75);
+
+  writeConstant(&chunk, 1.23, 123);
+  writeChunk(&chunk, OP_RETURN, 123);
 
   interpret(&chunk);
   freeVM();
