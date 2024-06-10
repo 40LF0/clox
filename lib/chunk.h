@@ -13,7 +13,16 @@
 // In the bytecode format, each instruction consists of a 1-byte operation code.
 // This number represents the type of instruction,
 // such as addition, subtraction, variable lookup, etc.
-typedef enum { OP_CONSTANT, OP_CONSTANT_LONG, OP_RETURN } OpCode;
+typedef enum {
+  OP_CONSTANT,
+  OP_CONSTANT_LONG,
+  OP_ADD,
+  OP_SUBTRACT,
+  OP_MULTIPLY,
+  OP_DIVIDE,
+  OP_NEGATE,
+  OP_RETURN
+} OpCode;
 
 typedef struct {
   int line;       // line numbers
