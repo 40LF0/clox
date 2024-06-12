@@ -15,6 +15,8 @@ add_library(libclox SHARED
         lib/value.c
         lib/vm.h
         lib/vm.c
+        lib/compiler.h
+        lib/compiler.c
 )
 
 include_directories(lib)
