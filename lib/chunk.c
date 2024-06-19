@@ -65,8 +65,7 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
   chunk->count++;
 }
 
-void writeConstant(Chunk *chunk, Value value, int line) {
-  int constant = addConstant(chunk, value);
+void writeConstant(Chunk *chunk, int constant, int line) {
   if (constant < 256) {
     writeChunk(chunk, OP_CONSTANT, line);
     writeChunk(chunk, (uint8_t)constant, line);

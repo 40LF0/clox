@@ -125,7 +125,8 @@ TEST(DisassembleChunkTest, WriteConstantTest) {
   Chunk chunk;
   initChunk(&chunk);
   for (int i = 0; i < 512; ++i) {
-    writeConstant(&chunk, i, i / 4);
+    int constant = addConstant(&chunk, i);
+    writeConstant(&chunk, constant, i / 4);
   }
 
   testing::internal::CaptureStdout();

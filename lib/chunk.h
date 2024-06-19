@@ -50,7 +50,7 @@ void freeLineArray(LineArray *array);
 void initChunk(Chunk *chuck);
 void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
-void writeConstant(Chunk *chunk, Value value, int line);
+void writeConstant(Chunk *chunk, int constant, int line);
 int addConstant(Chunk *chunk, Value value);
 int getLine(Chunk *chunk, int offset);
 
