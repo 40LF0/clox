@@ -57,7 +57,7 @@ TEST(DisassembleChunkTest, HandlesConstantInstruction) {
   Chunk chunk;
   initChunk(&chunk);
 
-  int constant = addConstant(&chunk, 1.2);
+  int constant = addConstant(&chunk, NUMBER_VAL(1.2));
   writeChunk(&chunk, OP_CONSTANT, 123);
   writeChunk(&chunk, constant, 123);
 
@@ -76,8 +76,8 @@ TEST(DisassembleChunkTest, HandlesMultipleInstructions) {
   Chunk chunk;
   initChunk(&chunk);
 
-  int constant1 = addConstant(&chunk, 1.23);
-  int constant2 = addConstant(&chunk, 1.26);
+  int constant1 = addConstant(&chunk, NUMBER_VAL(1.23));
+  int constant2 = addConstant(&chunk, NUMBER_VAL(1.26));
 
   writeChunk(&chunk, OP_CONSTANT, 123);
   writeChunk(&chunk, constant1, 123);
@@ -125,7 +125,7 @@ TEST(DisassembleChunkTest, WriteConstantTest) {
   Chunk chunk;
   initChunk(&chunk);
   for (int i = 0; i < 512; ++i) {
-    int constant = addConstant(&chunk, i);
+    int constant = addConstant(&chunk, NUMBER_VAL((double)i));
     writeConstant(&chunk, constant, i / 4);
   }
 
@@ -169,7 +169,7 @@ TEST(DisassembleInstructionTest, HandlesConstantInstruction) {
   Chunk chunk;
   initChunk(&chunk);
 
-  int constant = addConstant(&chunk, 1.2);
+  int constant = addConstant(&chunk, NUMBER_VAL(1.2));
   writeChunk(&chunk, OP_CONSTANT, 123);
   writeChunk(&chunk, constant, 123);
 
@@ -189,7 +189,7 @@ TEST(DisassembleInstructionTest, HandlesConstantLongInstruction) {
   Chunk chunk;
   initChunk(&chunk);
 
-  int constant = addConstant(&chunk, 1.2);
+  int constant = addConstant(&chunk, NUMBER_VAL(1.2));
   writeChunk(&chunk, OP_CONSTANT_LONG, 123);
   writeChunk(&chunk, 0, 123);
   writeChunk(&chunk, 0, 123);

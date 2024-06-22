@@ -9,7 +9,7 @@ extern "C" {
 #include "value.h"
 }
 
-double TEST_CONSTANT = 1.2;
+Value TEST_CONSTANT = NUMBER_VAL(1.2);
 
 TEST(ValueArrayTest, InitValueArray) {
   ValueArray valueArray;
@@ -25,7 +25,7 @@ TEST(ValueArrayTest, WriteValueArray) {
   writeValueArray(&valueArray, TEST_CONSTANT);
   EXPECT_EQ(1, valueArray.count);
   EXPECT_LE(1, valueArray.capacity);
-  EXPECT_EQ(TEST_CONSTANT, valueArray.values[0]);
+  EXPECT_EQ(AS_NUMBER(TEST_CONSTANT), AS_NUMBER(valueArray.values[0]));
   freeValueArray(&valueArray);
 }
 
@@ -45,7 +45,7 @@ TEST(ValueArrayTest, WriteValueArrayInitialCapacity) {
   writeValueArray(&valueArray, TEST_CONSTANT);
   EXPECT_EQ(1, valueArray.count);
   EXPECT_EQ(8, valueArray.capacity);
-  EXPECT_EQ(TEST_CONSTANT, valueArray.values[0]);
+  EXPECT_EQ(AS_NUMBER(TEST_CONSTANT), AS_NUMBER(valueArray.values[0]));
   freeValueArray(&valueArray);
 }
 
@@ -53,12 +53,12 @@ TEST(ValueArrayTest, WriteValueArrayDoubleCapacity) {
   ValueArray valueArray;
   initValueArray(&valueArray);
   for (int i = 0; i < 9; ++i) {
-    writeValueArray(&valueArray, (double)i);
+    writeValueArray(&valueArray, NUMBER_VAL((double)i));
   }
   EXPECT_EQ(9, valueArray.count);
   EXPECT_EQ(16, valueArray.capacity);
   for (int i = 0; i < 9; ++i) {
-    EXPECT_EQ(valueArray.values[i], (double)i);
+    EXPECT_EQ(AS_NUMBER(valueArray.values[i]), (double)i);
   }
   freeValueArray(&valueArray);
 }
