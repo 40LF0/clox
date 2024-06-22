@@ -224,7 +224,7 @@ Token scanToken() {
       return makeToken(match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
     case '"':
       return string();
+    default:
+      return errorToken("Unexpected character.");
   }
-
-  return errorToken("Unexpected character.");
 }
