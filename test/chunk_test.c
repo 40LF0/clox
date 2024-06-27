@@ -3,8 +3,9 @@
 //
 // Test file for chunk module.
 
-#include "unity.h"
 #include "chunk.h"
+
+#include "unity.h"
 
 void setUp(void) {
   // 추가 초기화 코드가 필요하면 여기에 작성

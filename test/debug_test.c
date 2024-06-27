@@ -41,18 +41,16 @@ void copyFileToBuffer(void) {
 }
 
 void endCaptureStdout(void) {
-  fflush(stdout); // Ensure all output is flushed to the file
+  fflush(stdout);  // Ensure all output is flushed to the file
   if (temp_stdout != NULL) {
     fclose(temp_stdout);
   }
 
   freopen("CON", "w", stdout);  // 표준 출력으로 되돌리기 (Windows 시스템)
-  copyFileToBuffer(); // 파일에서 버퍼로 데이터를 복사
+  copyFileToBuffer();           // 파일에서 버퍼로 데이터를 복사
 }
 
-void setUp(void) {
-
-}
+void setUp(void) {}
 
 void tearDown(void) {
   FILE* file = fopen("test_output.txt", "w");
