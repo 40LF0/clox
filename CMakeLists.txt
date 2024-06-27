@@ -1,41 +1,44 @@
 cmake_minimum_required(VERSION 3.28)
-project(clox)
+project(clox C)
 
-set(CMAKE_C_STANDARD 23)
+# Set C standard to C17
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
-add_library(libclox SHARED
-        lib/common.h
-        lib/chunk.h
+# Include directories
+include_directories(${PROJECT_SOURCE_DIR}/lib)
+include_directories(${PROJECT_SOURCE_DIR}/Unity/src)
+
+# Add source files
+set(SOURCES
         lib/chunk.c
-        lib/memory.h
         lib/memory.c
-        lib/debug.h
         lib/debug.c
-        lib/value.h
         lib/value.c
-        lib/vm.h
         lib/vm.c
-        lib/compiler.h
         lib/compiler.c
-        lib/scanner.h
         lib/scanner.c
 )
 
-include_directories(lib)
+# Add libclox library
+add_library(libclox SHARED ${SOURCES})
+
+# Add clox executable
 add_executable(clox main.c)
 target_link_libraries(clox libclox)
 
-add_subdirectory(googletest)
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+# Add Unity test framework
+add_subdirectory(Unity)
 
-# 'google_test_run' is the target name
-add_executable(google_test_run
-        test/main_test.cc
-        test/memory_test.cc
-        test/debug_test.cc
-        test/chunk_test.cc
-        test/value_test.cc
-)
+# Function to add a test executable
+function(add_test_executable test_name test_file)
+    add_executable(${test_name} ${test_file})
+    target_link_libraries(${test_name} libclox ${PROJECT_SOURCE_DIR}/Unity/src/unity.c)
+    add_dependencies(${test_name} libclox)
+endfunction()
 
-target_link_libraries(google_test_run gtest gtest_main)
-target_link_libraries(google_test_run libclox)
+# Add test executables
+add_test_executable(chunk_test test/chunk_test.c)
+add_test_executable(debug_test test/debug_test.c)
+add_test_executable(memory_test test/memory_test.c)
+add_test_executable(value_test test/value_test.c)
