@@ -18,6 +18,7 @@ set(SOURCES
         lib/vm.c
         lib/compiler.c
         lib/scanner.c
+        lib/object.c
 )
 
 # Add libclox library

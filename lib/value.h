@@ -10,6 +10,7 @@
 #include "common.h"
 
 typedef struct Obj Obj;
+typedef struct ObjStirng ObjString;
 
 typedef enum { VAL_BOOL, VAL_NIL, VAL_NUMBER, VAL_OBJ } ValueType;
 
