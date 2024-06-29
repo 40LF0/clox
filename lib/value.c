@@ -6,6 +6,7 @@
 
 #include "value.h"
 
+#include <object.h>
 #include <stdio.h>
 
 #include "memory.h"
