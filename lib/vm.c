@@ -48,9 +48,15 @@ static void runtimeError(const char* format, ...) {
   resetStack();
 }
 
-void initVM() { initStack(); }
+void initVM() {
+  initStack();
+  vm.objects = NULL;
+}
 
-void freeVM() { freeStack(); }
+void freeVM() {
+  freeStack();
+  freeObjects();
+}
 
 void push(Value value) {
   long long offset = vm.stackTop - vm.stack;
@@ -94,7 +100,7 @@ static void concatenate() {
   int length = a->length + b->length;
   char* chars = ALLOCATE(char, length + 1);
   memcpy(chars, a->chars, a->length);
-  memcpy(chars+a->length, b->chars,b->length);
+  memcpy(chars + a->length, b->chars, b->length);
   chars[length] = '\0';
 
   ObjString* result = takeString(chars, length);
