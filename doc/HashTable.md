@@ -17,6 +17,7 @@ collisions (where multiple keys map to the same bucket) can occur. The bucket ar
 managing these entries efficiently.
 
 ### 1.1 Load Factor
+
 The load factor is a measure of how full the hash table is. It is defined as the ratio of the number of entries to the
 number of buckets in the array. A high load factor indicates that the hash table is becoming full, which can lead to
 more collisions and decreased performance. To maintain efficient operations, the hash table typically resizes the bucket
@@ -26,7 +27,40 @@ the hash table remains efficient as it grows.
 
 ## 2. Collision Resolution
 
+Collision resolution is a crucial aspect of hash table implementation. When two or more keys hash to the same bucket
+index, the hash table must handle these collisions to maintain efficient data access. Common collision resolution
+strategies include chaining, where each bucket contains a linked list of entries, and open addressing, where the hash
+table searches for the next available bucket. CLox VM's hash table implementation uses linear probing to handle these
+collisions.
+
+### 2.1 Linear Probing
+
+In linear probing, if a collision occurs, the hash table checks the next bucket in the array and continues
+checking subsequent buckets until it finds an empty one. This approach ensures that the hash table remains efficient
+even in the presence of collisions, as it provides a simple and effective way to resolve conflicts without needing
+additional data structures like linked lists.
+
 ## 3. Hash Function
+
+The hash function is a critical component of the hash table. It takes a key and computes an index in the bucket array
+where the corresponding value should be stored. A good hash function generates a fixed-size integer hash code that
+varies based on every bit of the original data. The hash function used in CLox VM meets three important criteria:
+
+1. Deterministic: The same input will always produce the same hash code.
+2. Uniform: It distributes keys evenly across the bucket array, minimizing collisions.
+3. Fast: It computes hash codes quickly to ensure efficient access times.
+
+CLox uses the FNV-1a hash function, which is known for its simplicity, speed, and good distribution properties. FNV-1a
+processes each byte of the input and combines them into a single hash code, making it a suitable choice for the
+performance needs of CLox VM.
+
+### 3.1 FNV-1a Hash Function
+
+The FNV-1a hash function is a variant of the Fowler-Noll-Vo hash function, which is designed to be fast and effective
+for hashing strings and other data. It works by initializing a hash value to a large prime number and then iteratively
+processing each byte of the input data. For each byte, the hash value is XORed with the byte, then multiplied by a prime
+number (typically 16777619 for 32-bit hashes). This combination of XOR and multiplication provides a good mix of bits,
+ensuring that small changes in the input produce significantly different hash values.
 
 ## 4. Hash Table
 
