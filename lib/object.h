@@ -4,8 +4,8 @@
 // This module defines a object, which represets Value expect number and
 // boolean.
 
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef CLOX_OBJECT_H
+#define CLOX_OBJECT_H
 
 #include "common.h"
 #include "value.h"
@@ -40,4 +40,4 @@ static inline bool isObjType(Value value, ObjType type) {
   return IS_OBJ(value) && AS_OBJ(value)->type == type;
 }
 
-#endif  // OBJECT_H
+#endif  // CLOX_OBJECT_H

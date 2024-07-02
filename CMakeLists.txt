@@ -19,6 +19,7 @@ set(SOURCES
         lib/compiler.c
         lib/scanner.c
         lib/object.c
+        lib/table.c
 )
 
 # Add libclox library
