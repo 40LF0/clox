@@ -57,11 +57,25 @@ performance needs of CLox VM.
 ### 3.1 FNV-1a Hash Function
 
 The FNV-1a hash function is a variant of the Fowler-Noll-Vo hash function, which is designed to be fast and effective
-for hashing strings and other data. It works by initializing a hash value to a large prime number and then iteratively
+for hashing strings and other data. It works by initializing a hash value to a large prime number(typically 2166136261 for 32-bit) and then iteratively
 processing each byte of the input data. For each byte, the hash value is XORed with the byte, then multiplied by a prime
 number (typically 16777619 for 32-bit hashes). This combination of XOR and multiplication provides a good mix of bits,
 ensuring that small changes in the input produce significantly different hash values.
 
 ## 4. Hash Table
+
+In CLox, the hash table module is defined as a struct Table, which consists of the following components:
+
+- count: The number of entries currently in the hash table.
+- capacity: The capacity of the hash table, representing the number of buckets in the bucket array.
+- entries: An array of Entry structs, where each Entry holds a key-value pair.
+
+CLox's hash table implementation only increases in size and does not shrink. When the load factor exceeds 0.75, the hash
+table resizes by increasing the capacity and reallocating memory for the entries array. This process involves creating a
+new, larger array and rehashing all existing entries to ensure even distribution across the new buckets.
+
+When deleting an entry, CLox uses a tombstone to mark the deleted entry. This approach maintains the integrity of the
+linear probing sequence, ensuring that the hash table can continue to probe for other entries that may have collided and
+been placed further along in the array.
 
 ## 5. String Interning
