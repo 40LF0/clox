@@ -51,9 +51,11 @@ static void runtimeError(const char* format, ...) {
 void initVM() {
   initStack();
   vm.objects = NULL;
+  initTable(&vm.strings);
 }
 
 void freeVM() {
+  freeTable(&vm.strings);
   freeStack();
   freeObjects();
 }

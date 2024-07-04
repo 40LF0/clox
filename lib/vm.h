@@ -7,6 +7,7 @@
 #define CLOX_VM_H
 
 #include "chunk.h"
+#include "table.h"
 #include "value.h"
 
 #define VM_STACK_MIN_CAPACITY 256
@@ -17,6 +18,7 @@ typedef struct {
   int stackCapacity;
   Value* stack;
   Value* stackTop;
+  Table strings;
   Obj* objects;
 } VM;
 
