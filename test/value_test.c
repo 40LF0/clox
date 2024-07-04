@@ -11,16 +11,21 @@
 #include "unity.h"
 #include "vm.h"
 
-Value TEST_CONSTANT = NUMBER_VAL(1.2);
-Value TEST_BOOL_TRUE = BOOL_VAL(true);
-Value TEST_BOOL_FALSE = BOOL_VAL(false);
-Value TEST_NIL = NIL_VAL;
+Value TEST_CONSTANT;
+Value TEST_BOOL_TRUE;
+Value TEST_BOOL_FALSE;
+Value TEST_NIL;
 Value TEST_OBJ;
 
 void setUp(void) {
   initVM();
   ObjString* objString = copyString("test", 4);
   TEST_OBJ = OBJ_VAL(objString);
+
+  TEST_CONSTANT = NUMBER_VAL(1.2);
+  TEST_BOOL_TRUE = BOOL_VAL(true);
+  TEST_BOOL_FALSE = BOOL_VAL(false);
+  TEST_NIL = NIL_VAL;
 }
 
 void tearDown(void) {

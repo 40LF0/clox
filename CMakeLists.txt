@@ -23,7 +23,7 @@ set(SOURCES
 )
 
 # Add libclox library
-add_library(libclox SHARED ${SOURCES})
+add_library(libclox STATIC ${SOURCES})
 
 # Add clox executable
 add_executable(clox main.c)
