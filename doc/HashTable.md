@@ -57,7 +57,8 @@ performance needs of CLox VM.
 ### 3.1 FNV-1a Hash Function
 
 The FNV-1a hash function is a variant of the Fowler-Noll-Vo hash function, which is designed to be fast and effective
-for hashing strings and other data. It works by initializing a hash value to a large prime number(typically 2166136261 for 32-bit) and then iteratively
+for hashing strings and other data. It works by initializing a hash value to a large prime number(typically 2166136261
+for 32-bit) and then iteratively
 processing each byte of the input data. For each byte, the hash value is XORed with the byte, then multiplied by a prime
 number (typically 16777619 for 32-bit hashes). This combination of XOR and multiplication provides a good mix of bits,
 ensuring that small changes in the input produce significantly different hash values.
@@ -79,3 +80,9 @@ linear probing sequence, ensuring that the hash table can continue to probe for 
 been placed further along in the array.
 
 ## 5. String Interning
+
+String interning is a technique used to optimize memory usage and speed up string comparisons. In CLox VM, string
+interning involves storing only one copy of each distinct string value. When a new string is created, the hash table
+checks if an identical string already exists. If it does, the existing string is used instead of creating a new one.
+This reduces memory overhead and ensures that string comparisons can be done using pointer equality rather than
+character-by-character comparison, significantly improving performance in programs that use a lot of strings.
