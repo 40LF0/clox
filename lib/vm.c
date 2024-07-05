@@ -126,15 +126,19 @@ static InterpretResult run() {
     push(valueType(a op b));                          \
   } while (false)
 
+  printf("\n");
+  printf("== execution ==\n");
   for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
-    printf("        ");
-    for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
-      printf("[ ");
-      printValue(*slot);
-      printf(" ]");
+    if (vm.stack != vm.stackTop) {
+      printf("        ");
+      for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
+        printf("[ ");
+        printValue(*slot);
+        printf(" ]");
+      }
+      printf("\n");
     }
-    printf("\n");
     disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
 #endif
     uint8_t instruction;
@@ -201,9 +205,11 @@ static InterpretResult run() {
         }
         push(NUMBER_VAL(-AS_NUMBER(pop())));
         break;
-      case OP_RETURN: {
+      case OP_PRINT:
         printValue(pop());
         printf("\n");
+        break;
+      case OP_RETURN: {
         return INTERPRET_OK;
       }
     }
