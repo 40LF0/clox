@@ -151,6 +151,13 @@ static void endCompiler() {
 #endif
 }
 
+static void beginScope() {
+  current->scopeDepth++;
+}
+static void endScope() {
+  current->scopeDepth--;
+}
+
 static void expression();
 static void statement();
 static void declaration();
@@ -225,7 +232,9 @@ static void namedVariable(Token name, bool canAssign) {
   }
 }
 
-static void variable(bool canAssign) { namedVariable(parser.previous, canAssign); }
+static void variable(bool canAssign) {
+  namedVariable(parser.previous, canAssign);
+}
 
 static void unary(bool canAssign) {
   TokenType operatorType = parser.previous.type;
@@ -322,7 +331,7 @@ static void parsePrecedence(Precedence precedence) {
     infixRule(canAssign);
   }
 
-  if (canAssign&&match(TOKEN_EQUAL)) {
+  if (canAssign && match(TOKEN_EQUAL)) {
     error("Invalid assignment target.");
   }
 }
@@ -343,6 +352,15 @@ static void defineVariable(uint8_t global) {
 static ParseRule* getRule(TokenType type) { return &rules[type]; }
 
 static void expression() { parsePrecedence(PREC_ASSIGNMENT); }
+
+
+static void block() {
+  while(!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
+    declaration();
+  }
+
+  consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
+}
 
 static void varDeclaration() {
   uint8_t global = parseVariable("Expect variable name.");
@@ -394,6 +412,10 @@ static void synchronize() {
 static void declaration() {
   if (match(TOKEN_VAR)) {
     varDeclaration();
+  } else if (match(TOKEN_LEFT_BRACE)) {
+    beginScope();
+    block();
+    endScope();
   } else {
     statement();
   }
