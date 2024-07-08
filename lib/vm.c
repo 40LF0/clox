@@ -42,8 +42,8 @@ static void runtimeError(const char* format, ...) {
   va_end(args);
   fputs("\n", stderr);
 
-  size_t instruction = vm.ip - vm.chunk->code - 1;
-  int line = vm.chunk->lines.runs[instruction].line;
+  int offset = vm.ip - vm.chunk->code - 1;
+  int line = getLine(vm.chunk, offset);
   fprintf(stderr, "[line %d] in script\n", line);
   resetStack();
 }
@@ -180,8 +180,7 @@ static InterpretResult run() {
       }
       case OP_DEFINE_GLOBAL: {
         ObjString* name = READ_STRING();
-        Value value = peek(0);
-        tableSet(&vm.globals, name, value);
+        tableSet(&vm.globals, name, peek(0));
         pop();
         break;
       }
@@ -214,7 +213,8 @@ static InterpretResult run() {
           double a = AS_NUMBER(pop());
           push(NUMBER_VAL(a + b));
         } else {
-          runtimeError("Operands must be tow numbers or two strings.");
+          runtimeError("Operands must be two numbers or two strings.");
+          return INTERPRET_RUNTIME_ERROR;
         }
         break;
       }
