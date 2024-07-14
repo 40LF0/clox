@@ -169,6 +169,16 @@ static InterpretResult run() {
       case OP_POP:
         pop();
         break;
+      case OP_DOUBLE_POP:
+        pop();
+        pop();
+        break;
+      case OP_COMPARE: {
+        Value b = peek(0);
+        Value a = peek(1);
+        push(BOOL_VAL(valuesEqual(a, b)));
+        break;
+      }
       case OP_SET_LOCAL: {
         uint8_t slot = READ_BYTE();
         vm.stack[slot] = peek(0);

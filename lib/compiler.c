@@ -15,6 +15,8 @@
 #include "debug.h"
 #endif
 
+#define MAX_SWITCH_CASES 256
+
 typedef struct {
   Token current;
   Token previous;
@@ -345,6 +347,7 @@ ParseRule rules[] = {
     [TOKEN_SEMICOLON] = {NULL, NULL, PREC_NONE},
     [TOKEN_SLASH] = {NULL, binary, PREC_FACTOR},
     [TOKEN_STAR] = {NULL, binary, PREC_FACTOR},
+    [TOKEN_COLON] = {NULL, NULL, PREC_NONE},
     [TOKEN_BANG] = {unary, NULL, PREC_NONE},
     [TOKEN_BANG_EQUAL] = {NULL, binary, PREC_EQUALITY},
     [TOKEN_EQUAL] = {NULL, NULL, PREC_NONE},
@@ -372,6 +375,9 @@ ParseRule rules[] = {
     [TOKEN_TRUE] = {literal, NULL, PREC_NONE},
     [TOKEN_VAR] = {NULL, NULL, PREC_NONE},
     [TOKEN_WHILE] = {NULL, NULL, PREC_NONE},
+    [TOKEN_SWITCH] = {NULL, NULL, PREC_NONE},
+    [TOKEN_CASE] = {NULL, NULL, PREC_NONE},
+    [TOKEN_DEFAULT] = {NULL, NULL, PREC_NONE},
     [TOKEN_ERROR] = {NULL, NULL, PREC_NONE},
     [TOKEN_EOF] = {NULL, NULL, PREC_NONE},
 };
@@ -515,6 +521,65 @@ static void ifStatement() {
   patchJump(elseJump);
 }
 
+// Executes multiple statements within a case or default block
+static void switchBlockStatements() {
+  while (!check(TOKEN_CASE) && !check(TOKEN_DEFAULT) &&
+         !check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
+    statement();
+  }
+}
+
+static void switchStatement() {
+  consume(TOKEN_LEFT_PAREN, "Expect '(' after 'switch'.");
+  expression();  // Evaluate switch expression
+  consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
+  consume(TOKEN_LEFT_BRACE, "Expect '{' before switch cases.");
+
+  int caseEndJumps[MAX_SWITCH_CASES];  // To store jumps from cases to end of switch
+  int caseCount = 0;
+
+  // Loop through cases and the default block
+  while (!check(TOKEN_EOF) && !check(TOKEN_RIGHT_BRACE)) {
+    if (match(TOKEN_CASE)) {
+      expression();  // Evaluate case expression
+      consume(TOKEN_COLON, "Expect ':' after case value.");
+      emitByte(OP_COMPARE);  // Compare switch and case expressions
+      int caseSkip = emitJump(OP_JUMP_IF_FALSE);  // Jump for skipping case
+      emitByte(OP_DOUBLE_POP);  // Clean up compare result and case expression
+
+      switchBlockStatements();
+
+      // Handle too many cases
+      if (caseCount >= MAX_SWITCH_CASES) {
+        error("Too many cases in switch statement.");
+      }
+      caseEndJumps[caseCount++] = emitJump(OP_JUMP);  // Jump to end of switch
+      patchJump(caseSkip);
+      emitByte(OP_DOUBLE_POP);  // Clean up compare-result and case expression
+
+    } else if (match(TOKEN_DEFAULT)) {
+      consume(TOKEN_COLON, "Expect ':' after default.");
+      switchBlockStatements();
+
+      // Ensure default is followed by the end of the switch block
+      if (!check(TOKEN_RIGHT_BRACE)) {
+        errorAtCurrent("Expect '}' after default.");
+      }
+      break;
+    } else {
+      errorAtCurrent("Expect case or default or '}' in switch block.");
+    }
+  }
+  consume(TOKEN_RIGHT_BRACE, "Expect '}' after switch block.");
+
+  // Patch all case end jumps to the end of the switch statement
+  for (int i = 0; i < caseCount; i++) {
+    patchJump(caseEndJumps[i]);
+  }
+
+  emitByte(OP_POP);  // Clean up the switch expression
+}
+
 static void expressionStatement() {
   expression();
   consume(TOKEN_SEMICOLON, "Expect ';' after expression.");
@@ -553,7 +618,6 @@ static void forStatement() {
     loopStart = increaseStart;
     patchJump(bodyJump);
   }
-
 
   statement();
   emitLoop(loopStart);
@@ -598,6 +662,7 @@ static void synchronize() {
       case TOKEN_FOR:
       case TOKEN_IF:
       case TOKEN_WHILE:
+      case TOKEN_SWITCH:
       case TOKEN_PRINT:
       case TOKEN_RETURN:
         return;
@@ -620,6 +685,8 @@ static void declaration() {
 static void statement() {
   if (match(TOKEN_PRINT)) {
     printStatement();
+  } else if (match(TOKEN_SWITCH)) {
+    switchStatement();
   } else if (match(TOKEN_WHILE)) {
     whileStatement();
   } else if (match(TOKEN_FOR)) {
