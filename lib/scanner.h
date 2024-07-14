@@ -1,6 +1,7 @@
 // scanner.h
 // Created by Seungyeon Chung on 2024.06.14.
 //
+// The scanner is a component that parses source code and generates tokens.
 
 #ifndef CLOX_SCANNER_H
 #define CLOX_SCANNER_H
