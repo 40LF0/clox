@@ -87,6 +87,7 @@ void printObject(Value value) {
   switch (OBJ_TPYE(value)) {
     case OBJ_FUNCTION:
       printFunction(AS_FUNCTION(value));
+      break;
     case OBJ_STRING:
       printf("%s", AS_CSTRING(value));
       break;
