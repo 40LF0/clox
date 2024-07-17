@@ -43,7 +43,7 @@ static void runtimeError(const char* format, ...) {
   va_end(args);
   fputs("\n", stderr);
 
-  for (int i = vm.frameCount -1; i >= 0; i--) {
+  for (int i = vm.frameCount - 1; i >= 0; i--) {
     CallFrame* frame = &vm.frames[i];
     ObjFunction* function = frame->function;
     int offset = frame->ip - function->chunk.code - 1;
@@ -90,7 +90,11 @@ void push(Value value) {
 Value pop() {
   long long offset = vm.stackTop - vm.stack;
   int minCapacity = GROW_CAPACITY(VM_STACK_MIN_CAPACITY);
-
+#ifdef DEBUG_TRACE_EXECUTION
+  if (offset <= 0) {
+    printf("[WARN] VM tried to pop invalid position (offset: %lld)\n", offset);
+  }
+#endif
   if (vm.stackCapacity > minCapacity && offset <= (vm.stackCapacity / 4)) {
     int oldCapacity = vm.stackCapacity;
     vm.stackCapacity = SHRINK_CAPACITY(oldCapacity, minCapacity);
