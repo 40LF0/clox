@@ -557,7 +557,7 @@ static void function(FunctionType type) {
         errorAtCurrent("Can't have more than 255 parameters.");
       }
       uint8_t constant = parseVariable("Expect parameter name.");
-      declareVariable(constant);
+      defineVariable(constant);
     } while (match(TOKEN_COMMA));
   }
   consume(TOKEN_RIGHT_PAREN, "Expect ')' after parameters.");
