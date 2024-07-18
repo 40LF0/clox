@@ -45,6 +45,12 @@ static uint32_t hashString(const char* key, int length) {
   return hash;
 }
 
+ObjClosure* newClosure(ObjFunction* function) {
+  ObjClosure* clousre = ALLOCATE_OBJ(ObjClosure, OBJ_CLOSURE);
+  clousre->function = function;
+  return clousre;
+}
+
 ObjFunction* newFunction() {
   ObjFunction* function = ALLOCATE_OBJ(ObjFunction, OBJ_FUNCTION);
   function->arity = 0;
@@ -90,6 +96,9 @@ static void printFunction(ObjFunction* function) {
 
 void printObject(Value value) {
   switch (OBJ_TPYE(value)) {
+    case OBJ_CLOSURE:
+      printFunction(AS_CLOSURE(value)->function);
+      break;
     case OBJ_FUNCTION:
       printFunction(AS_FUNCTION(value));
       break;
