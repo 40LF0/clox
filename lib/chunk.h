@@ -41,6 +41,8 @@ typedef enum {
   OP_JUMP_IF_FALSE,
   OP_LOOP,
   OP_CALL,
+  OP_CLOSURE,
+  OP_CLOSURE_LONG,
   OP_RETURN
 } OpCode;
 
@@ -71,6 +73,7 @@ void initChunk(Chunk *chuck);
 void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
 void writeConstant(Chunk *chunk, int constant, int line);
+void writeClosure(Chunk *chunk, int constant, int line);
 int addConstant(Chunk *chunk, Value value);
 int getLine(Chunk *chunk, int offset);
 

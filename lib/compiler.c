@@ -148,6 +148,7 @@ static int emitJump(uint8_t instruction) {
   emitByte(0xff);
   return currentChunk()->count - 2;
 }
+
 static void emitReturn() {
   emitByte(OP_NIL);
   emitByte(OP_RETURN);
@@ -165,6 +166,10 @@ static uint16_t makeConstant(Value value) {
 
 static void emitConstant(Value value) {
   writeConstant(currentChunk(), makeConstant(value), parser.previous.line);
+}
+
+static void emitClosure(Value value) {
+  writeClosure(currentChunk(), makeConstant(value), parser.previous.line);
 }
 
 static void patchJump(int offset) {
@@ -565,7 +570,7 @@ static void function(FunctionType type) {
   block();
 
   ObjFunction* function = endCompiler();
-  emitConstant(OBJ_VAL(function));
+  emitClosure(OBJ_VAL(function));
 }
 
 static void funDeclaration() {
