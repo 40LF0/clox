@@ -125,7 +125,8 @@ static Value peek(int distance) { return vm.stackTop[-1 - distance]; }
 
 static bool call(ObjClosure* closure, int argCount) {
   if (argCount != closure->function->arity) {
-    runtimeError("Expect %d arguments but got %d.", closure->function->arity, argCount);
+    runtimeError("Expect %d arguments but got %d.", closure->function->arity,
+                 argCount);
     return false;
   }
 
@@ -161,6 +162,11 @@ static bool callValue(Value callee, int argCount) {
   return false;
 }
 
+static ObjUpvalue* captureUpvalue(Value* local) {
+  ObjUpvalue* createdUpvalue = newUpvalue(local);
+  return createdUpvalue;
+}
+
 static bool isFalsey(Value value) {
   return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
@@ -182,8 +188,9 @@ static void concatenate() {
 static InterpretResult run() {
   CallFrame* frame = &vm.frames[vm.frameCount - 1];
 #define READ_BYTE() (*frame->ip++)
-#define READ_CONSTANT() (frame->closure->function->chunk.constants.values[READ_BYTE()])
-#define READ_CONSTANT_LONG()        \
+#define READ_CONSTANT() \
+  (frame->closure->function->chunk.constants.values[READ_BYTE()])
+#define READ_CONSTANT_LONG()                 \
   (frame->closure->function->chunk.constants \
        .values[READ_BYTE() << 16 | READ_BYTE() << 8 | READ_BYTE()])
 #define READ_STRING() AS_STRING(READ_CONSTANT())
@@ -213,8 +220,9 @@ static InterpretResult run() {
       }
       printf("\n");
     }
-    disassembleInstruction(&frame->closure->function->chunk,
-                           (int)(frame->ip - frame->closure->function->chunk.code));
+    disassembleInstruction(
+        &frame->closure->function->chunk,
+        (int)(frame->ip - frame->closure->function->chunk.code));
 #endif
     uint8_t instruction;
     switch (instruction = READ_BYTE()) {
@@ -283,6 +291,16 @@ static InterpretResult run() {
           runtimeError("Undefined variable '%s'.", name->chars);
           return INTERPRET_RUNTIME_ERROR;
         }
+        break;
+      }
+      case OP_GET_UPVALUE: {
+        uint8_t slot = READ_BYTE();
+        push(*frame->closure->upvalues[slot]->location);
+        break;
+      }
+      case OP_SET_UPVALUE: {
+        uint8_t slot = READ_BYTE();
+        *frame->closure->upvalues[slot]->location = peek(0);
         break;
       }
       case OP_EQUAL: {
@@ -360,12 +378,30 @@ static InterpretResult run() {
         ObjFunction* function = AS_FUNCTION(READ_CONSTANT());
         ObjClosure* closure = newClosure(function);
         push(OBJ_VAL(closure));
+        for (int i = 0; i < closure->upvalueCount; i++) {
+          uint8_t isLocal = READ_BYTE();
+          uint8_t index = READ_BYTE();
+          if (isLocal) {
+            closure->upvalues[i] = captureUpvalue(frame->slots + index);
+          } else {
+            closure->upvalues[i] = frame->closure->upvalues[index];
+          }
+        }
         break;
       }
       case OP_CLOSURE_LONG: {
         ObjFunction* function = AS_FUNCTION(READ_CONSTANT_LONG());
         ObjClosure* closure = newClosure(function);
         push(OBJ_VAL(closure));
+        for (int i = 0; i < closure->upvalueCount; i++) {
+          uint8_t isLocal = READ_BYTE();
+          uint8_t index = READ_BYTE();
+          if (isLocal) {
+            closure->upvalues[i] = captureUpvalue(frame->slots + index);
+          } else {
+            closure->upvalues[i] = frame->closure->upvalues[index];
+          }
+        }
         break;
       }
       case OP_RETURN: {

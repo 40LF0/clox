@@ -46,8 +46,15 @@ static uint32_t hashString(const char* key, int length) {
 }
 
 ObjClosure* newClosure(ObjFunction* function) {
+  ObjUpvalue** upvalues = ALLOCATE(ObjUpvalue*, function->upvalueCount);
+  for (int i = 0; i < function->upvalueCount; i++) {
+    upvalues[i] = NULL;
+  }
+
   ObjClosure* clousre = ALLOCATE_OBJ(ObjClosure, OBJ_CLOSURE);
   clousre->function = function;
+  clousre->upvalues = upvalues;
+  clousre->upvalueCount = function->upvalueCount;
   return clousre;
 }
 
@@ -86,6 +93,11 @@ ObjString* copyString(const char* chars, int length) {
   heapChars[length] = '\0';
   return allocateString(heapChars, length, hash);
 }
+ObjUpvalue* newUpvalue(Value* slot) {
+  ObjUpvalue* upvalue = ALLOCATE_OBJ(ObjUpvalue, OBJ_UPVALUE);
+  upvalue->location = slot;
+  return upvalue;
+}
 
 static void printFunction(ObjFunction* function) {
   if (function->name == NULL) {
@@ -105,6 +117,9 @@ void printObject(Value value) {
       break;
     case OBJ_STRING:
       printf("%s", AS_CSTRING(value));
+      break;
+    case OBJ_UPVALUE:
+      printf("upvalue");
       break;
     case OBJ_NATIVE:
       printf("<native fn>");
