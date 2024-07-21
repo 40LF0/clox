@@ -287,8 +287,7 @@ static void binary(bool canAssign) {
     case TOKEN_SLASH:
       emitByte(OP_DIVIDE);
       break;
-    default:
-      return;
+    default:;
   }
 }
 
@@ -373,8 +372,7 @@ static void unary(bool canAssign) {
     case TOKEN_MINUS:
       emitByte(OP_NEGATE);
       break;
-    default:
-      return;
+    default:;
   }
 }
 
@@ -389,8 +387,7 @@ static void literal(bool canAssign) {
     case TOKEN_TRUE:
       emitByte(OP_TRUE);
       break;
-    default:
-      return;
+    default:;
   }
 }
 
