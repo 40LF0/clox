@@ -370,7 +370,7 @@ static InterpretResult run() {
         push(BOOL_VAL(isFalsey(pop())));
         break;
       case OP_NEGATE:
-        if (!IS_NUMBER(peek(0))) {
+        if (IS_NUMBER(peek(0)) == false) {
           runtimeError("Operand must be a number.");
           return INTERPRET_RUNTIME_ERROR;
         }
