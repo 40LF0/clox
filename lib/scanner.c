@@ -116,6 +116,8 @@ static TokenType identifierType() {
             return checkKeyword(2, 2, "se", TOKEN_CASE);
           case 'l':
             return checkKeyword(2, 3, "ass", TOKEN_CLASS);
+          default:
+            break;
         }
       }
     case 'd':
@@ -131,6 +133,8 @@ static TokenType identifierType() {
             return checkKeyword(2, 1, "r", TOKEN_FOR);
           case 'u':
             return checkKeyword(2, 1, "n", TOKEN_FUN);
+          default:
+            break;
         }
       }
       break;
@@ -151,6 +155,8 @@ static TokenType identifierType() {
             return checkKeyword(2, 3, "per", TOKEN_SUPER);
           case 'w':
             return checkKeyword(2, 4, "itch", TOKEN_SWITCH);
+          default:
+            break;
         }
       }
       return checkKeyword(1, 4, "uper", TOKEN_SUPER);
@@ -161,6 +167,8 @@ static TokenType identifierType() {
             return checkKeyword(2, 2, "is", TOKEN_THIS);
           case 'r':
             return checkKeyword(2, 2, "ue", TOKEN_TRUE);
+          default:
+            break;
         }
       }
       break;
@@ -168,6 +176,8 @@ static TokenType identifierType() {
       return checkKeyword(1, 2, "ar", TOKEN_VAR);
     case 'w':
       return checkKeyword(1, 4, "hile", TOKEN_WHILE);
+    default:
+      return TOKEN_IDENTIFIER;
   }
   return TOKEN_IDENTIFIER;
 }

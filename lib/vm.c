@@ -451,6 +451,9 @@ static InterpretResult run() {
         frame = &vm.frames[vm.frameCount - 1];
         break;
       }
+      default:
+        printf("Cannot exeucted Unknown opcode %d\n", instruction);
+        return INTERPRET_RUNTIME_ERROR;
     }
   }
 

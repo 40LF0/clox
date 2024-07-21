@@ -50,7 +50,7 @@ static void freeObject(Obj *object) {
   }
 }
 
-void *freeObjects() {
+void freeObjects() {
   Obj *object = vm.objects;
   while (object != NULL) {
     Obj *next = object->next;
