@@ -12,11 +12,11 @@
 #include "vm.h"
 
 static void repl() {
-  char line[1024];
   for (;;) {
+    char line[1024];
     printf(">");
 
-    if (!fgets(line, sizeof(line), stdin)) {
+    if (fgets(line, sizeof(line), stdin) == 0) {
       printf("\n");
       break;
     }
