@@ -72,7 +72,7 @@ void initLineArray(LineArray *array);
 void writeLineArray(LineArray *array, int line);
 void freeLineArray(LineArray *array);
 
-void initChunk(Chunk *chuck);
+void initChunk(Chunk *chunk);
 void freeChunk(Chunk *chunk);
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
 void writeConstant(Chunk *chunk, int constant, int line);
