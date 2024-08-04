@@ -460,6 +460,9 @@ static InterpretResult run() {
         frame = &vm.frames[vm.frameCount - 1];
         break;
       }
+      case OP_CLASS:
+        push(OBJ_VAL(newClass(READ_STRING())));
+        break;
       default:
         printf("Cannot exeucted Unknown opcode %d\n", instruction);
         return INTERPRET_RUNTIME_ERROR;
