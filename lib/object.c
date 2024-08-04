@@ -54,7 +54,7 @@ static uint32_t hashString(const char* key, int length) {
   return hash;
 }
 
-ObjClass* newClass(ObjClass* name) {
+ObjClass* newClass(ObjString* name) {
   ObjClass* klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
   klass->name = name;
   return klass;
