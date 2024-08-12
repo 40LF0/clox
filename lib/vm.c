@@ -282,6 +282,11 @@ static InterpretResult run() {
     if (vm.stack != vm.stackTop) {
       printf("        ");
       for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
+        /*
+         * TODO: fix the bug in release mode.
+         * print statements outputted incorrectly
+         * if line length exceeded 75 characters.
+        */
         printf("[ ");
         printValue(*slot);
         printf(" ]");
