@@ -155,6 +155,7 @@ static bool callValue(Value callee, int argCount) {
     switch (OBJ_TPYE(callee)) {
       case OBJ_BOUND_METHOD: {
         ObjBoundMethod* bound = AS_BOUND_METHOD(callee);
+        vm.stackTop[-argCount - 1] = bound->receiver;
         return call(bound->method, argCount);
       }
       case OBJ_CLASS: {
@@ -286,7 +287,7 @@ static InterpretResult run() {
          * TODO: fix the bug in release mode.
          * print statements outputted incorrectly
          * if line length exceeded 75 characters.
-        */
+         */
         printf("[ ");
         printValue(*slot);
         printf(" ]");
